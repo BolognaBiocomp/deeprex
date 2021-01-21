@@ -11,6 +11,7 @@ def a3m_to_aln(a3m_file, aln_file):
             of.write(re.sub('[a-z]', '', line))
     iif.close()
     of.close()
+    
 
 def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1):
     #"/home/cas/software/hh-suite/build/bin/hhblits -i temp/"+id+".fasta
