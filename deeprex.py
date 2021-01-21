@@ -18,6 +18,9 @@ import deeprexlib.deeprexconfig as cfg
 from deeprexlib import hhblits
 from deeprexlib import utils
 
+import tensorflow as tf
+tf.get_logger().setLevel('INFO')
+
 def main():
     DESC="DeepREx: Deep learning-based predictor of Residue EXposure"
     parser = argparse.ArgumentParser(description=DESC)
