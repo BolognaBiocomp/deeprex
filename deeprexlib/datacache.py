@@ -26,8 +26,7 @@ class DataCache():
             try:
                 os.mkdir(path)
             except (OSError, e):
-                if e.errno != errno.EEXIST:
-                    raise
+                pass
 
     def _get_path(self, digest):
         path = self.cacheDir

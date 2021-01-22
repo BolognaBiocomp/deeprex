@@ -13,9 +13,6 @@ def a3m_to_aln(a3m_file, aln_file):
     of.close()
 
 def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
-    #"/home/cas/software/hh-suite/build/bin/hhblits -i temp/"+id+".fasta
-    #-d /mnt/fat1/databases/HHBlits/UniRef30_2020_02/UniRef30_2020_02
-    #-n 2 -oa3m temp/"+id+".a3m -ohhm temp/"+id+".hhm -o /dev/null -cpu 2"
     hhblits_a3m_out = we.createFile(acc+".hhblits.", ".a3m")
     hhblits_aln_out = we.createFile(acc+".hhblits.", ".aln")
     hhblits_hhm_out = we.createFile(acc+".hhblits.", ".hhm")
