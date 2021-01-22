@@ -1,6 +1,10 @@
 import numpy
 from keras.models import load_model
 from keras import backend as K
+from time import localtime, strftime
+
+def print_date(msg):
+  print ("[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg))
 
 def build_sequence_profile(acc, aln_file, we):
     aa_order = '-ARNDCQEGHILKMFPSTWYV'
