@@ -38,7 +38,7 @@ class DataCache():
         return path
 
     def lookup(self, sequence, ext):
-        digest = hashlib.sha512(sequence).hexdigest()
+        digest = hashlib.sha512(sequence.encode("utf-8")).hexdigest()
         name = os.path.join(self._get_path(digest), '%s.%s' % (digest, ext))
         try:
             f=open(name)
@@ -50,21 +50,21 @@ class DataCache():
 
     def store(self, filename, sequence, ext):
         if not self.lookup(sequence, ext) or self.forceRebuild:
-            digest = hashlib.sha512(sequence).hexdigest()
+            digest = hashlib.sha512(sequence.encode("utf-8")).hexdigest()
             self._create_path(digest)
             dest = os.path.join(self._get_path(digest), '%s.%s' % (digest, ext))
             shutil.copyfile(filename, dest)
 
     def retrieve(self, sequence, ext, outfile):
         if self.lookup(sequence, ext):
-            digest = hashlib.sha512(sequence).hexdigest()
+            digest = hashlib.sha512(sequence.encode("utf-8")).hexdigest()
             name = os.path.join(self._get_path(digest), '%s.%s' % (digest, ext))
             shutil.copyfile(name, outfile)
 
     def get_handle(self, sequence, ext):
         fh = None
         if self.lookup(sequence, ext):
-            digest = hashlib.sha512(sequence).hexdigest()
+            digest = hashlib.sha512(sequence.encode("utf-8")).hexdigest()
             name = os.path.join(self._get_path(digest), '%s.%s' % (digest, ext))
             fh = open(name)
         return fh
