@@ -25,8 +25,10 @@ class DataCache():
             path = os.path.join(path, digest[s:e])
             try:
                 os.mkdir(path)
-            except (OSError, e):
+            except FileExistsError:
                 pass
+            except:
+                raise
 
     def _get_path(self, digest):
         path = self.cacheDir
