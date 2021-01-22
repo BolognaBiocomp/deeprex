@@ -25,7 +25,7 @@ class DataCache():
             path = os.path.join(path, digest[s:e])
             try:
                 os.mkdir(path)
-            except OSError, e:
+            except (OSError, e):
                 if e.errno != errno.EEXIST:
                     raise
 
