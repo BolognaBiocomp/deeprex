@@ -25,7 +25,7 @@ def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
     try:
         exec_hhblits = True
         if data_cache is not None:
-            sequence = "".join([x.strip() for x in open(fastaFile).readlines()[1:]])
+            sequence = "".join([x.strip() for x in open(fasta_file).readlines()[1:]])
             if data_cache.lookup(sequence, 'hhblits.aln'):
                 if data_cache.lookup(sequence, 'hhblits.hhm'):
                     exec_hhblits = False
