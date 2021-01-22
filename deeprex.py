@@ -38,13 +38,14 @@ def main():
     ns = parser.parse_args()
     try:
         we = workenv.TemporaryEnv()
+        data_cache = utils.get_data_cache()
         ofs = open(ns.outf, 'w')
         for record in SeqIO.parse(ns.fasta, 'fasta'):
             prefix = record.id.replace("|","_")
             fasta_seq  = we.createFile(prefix+".", ".fasta")
             SeqIO.write([record], fasta_seq, 'fasta')
             utils.print_date("Running HHBlits and building sequence profile [protein=%s]" % record.id)
-            hhblits_aln_out, hhblits_hhm_out = hhblits.run_hhblits(prefix, ns.hhblits_db, fasta_seq, we, cpus=ns.cpus)
+            hhblits_aln_out, hhblits_hhm_out = hhblits.run_hhblits(prefix, ns.hhblits_db, fasta_seq, we, cpus=ns.cpus, data_cache=data_cache)
             sequence_profile_file = utils.build_sequence_profile(prefix, hhblits_aln_out, we)
             sequence = str(record.seq)
             utils.print_date("Encode protein sequence [protein=%s]" % record.id)

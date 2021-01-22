@@ -4,7 +4,15 @@ from keras import backend as K
 from time import localtime, strftime
 
 def print_date(msg):
-  print ("[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg))
+    print ("[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg))
+
+def get_data_cache():
+    import os
+    from . import datacache
+    ret = None
+    if 'DEEPREX_DATA_CACHE_DIR' in os.environ:
+        ret = datacache.DataCache(os.environ['DEEPREX_DATA_CACHE_DIR'])
+    return ret
 
 def build_sequence_profile(acc, aln_file, we):
     aa_order = '-ARNDCQEGHILKMFPSTWYV'
@@ -90,8 +98,8 @@ def predict(protein, model_file):
 
 def write_tsv_output(acc, sequence, predictions, out_file):
     for i in range(len(predictions)):
-        label = 0
+        label = "Buried"
         if predictions[i][0] > 0.5:
-            label = 1
+            label = "Exposed"
         reliability = round(2.0 * numpy.absolute(predictions[i][0] - 0.5), 2)
         print(acc, i+1, sequence[i], label, reliability, sep="\t", file=out_file)

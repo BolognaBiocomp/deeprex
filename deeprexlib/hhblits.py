@@ -12,7 +12,7 @@ def a3m_to_aln(a3m_file, aln_file):
     iif.close()
     of.close()
 
-def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1):
+def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
     #"/home/cas/software/hh-suite/build/bin/hhblits -i temp/"+id+".fasta
     #-d /mnt/fat1/databases/HHBlits/UniRef30_2020_02/UniRef30_2020_02
     #-n 2 -oa3m temp/"+id+".a3m -ohhm temp/"+id+".hhm -o /dev/null -cpu 2"
@@ -22,17 +22,28 @@ def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1):
     hhblits_stdout = we.createFile(acc+".hhblits.stdout.", ".log")
     hhblits_stderr = we.createFile(acc+".hhblits.stderr.", ".log")
 
-    #sequence = "".join([x.strip() for x in open(fastaFile).readlines()[1:]])
-
     try:
-        subprocess.check_output(['hhblits', '-i', fasta_file,
-                                 '-d', db_prefix,
-                                 '-n', str(cpus),
-                                 '-oa3m', hhblits_a3m_out,
-                                 '-ohhm', hhblits_hhm_out,
-                                 '-o', hhblits_stdout],
-                                 stderr=open(hhblits_stderr, 'w'))
-        a3m_to_aln(hhblits_a3m_out, hhblits_aln_out)
+        exec_hhblits = True
+        if data_cache is not None:
+            sequence = "".join([x.strip() for x in open(fastaFile).readlines()[1:]])
+            if data_cache.lookup(sequence, 'hhblits.aln'):
+                if data_cache.lookup(sequence, 'hhblits.hhm'):
+                    exec_hhblits = False
+        if exec_hhblits:
+            subprocess.check_output(['hhblits', '-i', fasta_file,
+                                    '-d', db_prefix,
+                                    '-n', str(cpus),
+                                    '-oa3m', hhblits_a3m_out,
+                                    '-ohhm', hhblits_hhm_out,
+                                    '-o', hhblits_stdout],
+                                    stderr=open(hhblits_stderr, 'w'))
+            a3m_to_aln(hhblits_a3m_out, hhblits_aln_out)
+            if data_cache is not None:
+                data_cache.store(hhblits_aln_out, sequence, 'hhblits.aln')
+                data_cache.store(hhblits_hhm_out, sequence, 'hhblits.hhm')
+        else:
+            data_cache.retrieve(sequence, 'hhblits.aln', hhblits_aln_out)
+            data_cache.retrieve(sequence, 'hhblits.hhm', hhblits_hhm_out)
     except:
         logging.error("HHblits failed. For details, please see stderr file %s" % hhblits_stderr)
         raise
