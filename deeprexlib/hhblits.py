@@ -25,7 +25,8 @@ def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
             sequence = "".join([x.strip() for x in open(fasta_file).readlines()[1:]])
             if data_cache.lookup(sequence, 'hhblits.aln'):
                 if data_cache.lookup(sequence, 'hhblits.hhm'):
-                    exec_hhblits = False
+                    if data_cache.lookup(sequence, 'hhblits.a3m'):
+                        exec_hhblits = False
         if exec_hhblits:
             subprocess.check_output(['hhblits', '-i', fasta_file,
                                     '-d', db_prefix,
@@ -38,6 +39,7 @@ def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
             if data_cache is not None:
                 data_cache.store(hhblits_aln_out, sequence, 'hhblits.aln')
                 data_cache.store(hhblits_hhm_out, sequence, 'hhblits.hhm')
+                data_cache.store(hhblits_a3m_out, sequence, 'hhblits.a3m')
         else:
             data_cache.retrieve(sequence, 'hhblits.aln', hhblits_aln_out)
             data_cache.retrieve(sequence, 'hhblits.hhm', hhblits_hhm_out)
