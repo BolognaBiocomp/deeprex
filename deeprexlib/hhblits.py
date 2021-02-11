@@ -32,7 +32,8 @@ def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
         if exec_hhblits:
             subprocess.check_output(['hhblits', '-i', fasta_file,
                                     '-d', db_prefix,
-                                    '-n', str(cpus),
+                                    '-n', "2",
+                                    '-cpu', str(cpus),
                                     '-oa3m', hhblits_a3m_out,
                                     '-ohhm', hhblits_hhm_out,
                                     '-o', hhblits_stdout],
