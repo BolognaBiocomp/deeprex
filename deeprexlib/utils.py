@@ -35,8 +35,10 @@ def build_sequence_profile(acc, aln_file, we):
             except:
                 pass
         n = numpy.sum(counts)
-        counts[1:] /= numpy.sum(counts[1:])
-        counts[0] /= n
+        if numpy.sum(counts[1:]) != 0:
+            counts[1:] /= numpy.sum(counts[1:])
+        if n != 0:
+            counts[0] /= n
         matrix.append(counts)
     matrix = numpy.array(matrix)
     numpy.savetxt(sequence_profile_file, matrix, fmt="%.2f")
