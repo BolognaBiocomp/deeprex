@@ -193,7 +193,7 @@ def score_conservation(align_file, gap_cutoff=0.7, window_size=1,
         if gap_percentage(col) <= gap_cutoff:
             scores.append(shannon_entropy(col, seq_weights, use_gap_penalty))
         else:
-            scores.append(-1000.)
+            scores.append(0.0)
     if window_size > 0:
         scores = window_score(scores, window_size, win_lam)
     return scores
