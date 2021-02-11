@@ -3,6 +3,8 @@ from keras.models import load_model
 from keras import backend as K
 from time import localtime, strftime
 
+from . import deeprexconfig as cfg
+
 def print_date(msg):
     print ("[%s] %s" % (strftime("%a, %d %b %Y %H:%M:%S", localtime()), msg))
 
@@ -96,10 +98,20 @@ def predict(protein, model_file):
     predictions = model.predict_on_batch(xs).tolist()[0]
     return predictions
 
-def write_tsv_output(acc, sequence, predictions, out_file):
+def score_hp(sequence, window):
+    from Bio.SeqUtils import ProtParam, ProtParamData
+    if window > 1:
+        pad_seq = "X" * int(window/2) + sequence + "X" * int(window/2)
+        hydro = ProtParam.ProteinAnalysis(pad_seq).protein_scale(cfg.KD, window)
+    else:
+        hydro = [cfg.KD.get(aa, 0.0) for aa in sequence]
+    return hydro
+
+def write_tsv_output(acc, sequence, predictions,
+                     hydrophobicity, conservation, out_file):
     for i in range(len(predictions)):
         label = "Buried"
         if predictions[i][0] > 0.5:
             label = "Exposed"
         reliability = round(2.0 * numpy.absolute(predictions[i][0] - 0.5), 2)
-        print(acc, i+1, sequence[i], label, reliability, sep="\t", file=out_file)
+        print(acc, i+1, sequence[i], label, reliability, hydrophobicity[i], conservation[i], sep="\t", file=out_file)
