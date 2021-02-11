@@ -114,4 +114,5 @@ def write_tsv_output(acc, sequence, predictions,
         if predictions[i][0] > 0.5:
             label = "Exposed"
         reliability = round(2.0 * numpy.absolute(predictions[i][0] - 0.5), 2)
-        print(acc, i+1, sequence[i], label, reliability, hydrophobicity[i], conservation[i], sep="\t", file=out_file)
+        print(acc, i+1, sequence[i], label, reliability,
+              round(hydrophobicity[i], 3), round(conservation[i], 5), sep="\t", file=out_file)
