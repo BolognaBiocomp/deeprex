@@ -104,15 +104,16 @@ def calculate_sequence_weights(msa):
         freq_counts = [0] * len(amino_acids)
         col = []
         for j in range(len(msa)):
-            if msa[j][i] != '-': # ignore gaps
+            if msa[j][i] != '-' and msa[j][i] in amino_acids: # ignore gaps
                 freq_counts[aa_to_index[msa[j][i]]] += 1
         num_observed_types = 0
         for j in range(len(freq_counts)):
             if freq_counts[j] > 0: num_observed_types +=1
         for j in range(len(msa)):
-            d = freq_counts[aa_to_index[msa[j][i]]] * num_observed_types
-            if d > 0:
-                seq_weights[j] += 1. / d
+            if msa[j][i] in amino_acids:
+                d = freq_counts[aa_to_index[msa[j][i]]] * num_observed_types
+                if d > 0:
+                    seq_weights[j] += 1. / d
     for w in range(len(seq_weights)):
             seq_weights[w] /= len(msa[0])
     return seq_weights
