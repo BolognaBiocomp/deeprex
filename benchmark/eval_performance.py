@@ -49,7 +49,8 @@ def f1(cm):
     else:
         return 0.0
 
-cm = read_data(sys.argv[1])
+ytrue, ypred = read_data(sys.argv[1])
+cm = confusion_matrix(ytrue, ypred)
 print("SENSITIVITY:", sens(cm), sep="\t")
 print("PRECISION:", prec(cm), sep="\t")
 print("F1:", f1(cm), sep="\t")
