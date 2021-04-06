@@ -3,7 +3,7 @@
 export DEEPREX_ROOT=$(realpath ..)
 export PATH=${DEEPREX_ROOT}:${PATH}
 
-bts_list=blin_test_set/blind_test_set.lst
+bts_list=blind_test_set/blind_test_set.lst
 
 tmpworkdir=$(mktemp --tmpdir=. -d)
 
