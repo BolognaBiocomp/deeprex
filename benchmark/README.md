@@ -14,8 +14,8 @@ multiple sequence alignments and HMM files using the HHBlits program and the
 the [UniClust30 database](http://wwwuser.gwdg.de/~compbiol/uniclust/2020_02/),
 version 2020_02.
 
-To regenerate HHblits files for each protein, download the
-[UniClust30 database](http://wwwuser.gwdg.de/~compbiol/uniclust/2020_02/)
+To regenerate HHblits files for each protein (not needed to run the benchmark),
+download the [UniClust30 database](http://wwwuser.gwdg.de/~compbiol/uniclust/2020_02/)
 and run:
 
 ```
