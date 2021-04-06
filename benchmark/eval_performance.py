@@ -42,10 +42,10 @@ def q2(cm):
     return (cm[0,0]+cm[1,1])/np.sum(cm)
 
 def f1(cm):
-    sens = sens(cm)
-    prec = prec(cm)
-    if sens+prec > 0:
-        return 2*sens*prec/(sens+prec)
+    s = sens(cm)
+    p = prec(cm)
+    if s+p > 0:
+        return 2*s*p/(s+p)
     else:
         return 0.0
 
