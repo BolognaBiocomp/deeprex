@@ -46,7 +46,7 @@ Then, let's download an example sequence from UniProtKB, e.g. the TUridylate kin
 ```
 $ wget https://www.uniprot.org/uniprot/Q46GQ4.fasta
 ```
-We also need a valid HHBlits database. In our DeepREx server we use the [UniClust30 database](http://wwwuser.gwdg.de/~compbiol/uniclust/2020_06/). Here, for simplicity, we'll use a smaller database e.g. the [Pfam HHblits database](http://wwwuser.gwdg.de/~compbiol/data/hhsuite/databases/hhsuite_dbs/pfamA_33.1.tar.gz).
+We also need a valid HHBlits database. In our DeepREx server we use the [UniClust30 database](http://wwwuser.gwdg.de/~compbiol/uniclust/2020_02/). Here, for simplicity, we'll use a smaller database e.g. the [Pfam HHblits database](http://wwwuser.gwdg.de/~compbiol/data/hhsuite/databases/hhsuite_dbs/pfamA_33.1.tar.gz).
 Let's download and unpack the database:
 
 ```
