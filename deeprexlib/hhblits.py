@@ -13,7 +13,17 @@ def a3m_to_aln(a3m_file, aln_file):
     iif.close()
     of.close()
 
-def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
+def aln_to_faln(aln_file, faln_file):
+    aln_f = open(aln_file)
+    o_fal = open(faln_file, 'w')
+    seq_c = 1
+    for line in aln_f.readlines():
+        print(">seq_%d" % seq_c, file=o_fal)
+        print(line.rstrip(), file=o_fal)
+    o_fal.close()
+    aln_f.close()
+
+def run_hhblits(acc, db_prefix, fasta_file, we, gap_cutoff=0.7, cpus=1, data_cache=None):
     hhblits_a3m_out = we.createFile(acc+".hhblits.", ".a3m")
     hhblits_aln_out = we.createFile(acc+".hhblits.", ".aln")
     hhblits_hhm_out = we.createFile(acc+".hhblits.", ".hhm")
@@ -46,15 +56,8 @@ def run_hhblits(acc, db_prefix, fasta_file, we, cpus=1, data_cache=None):
         else:
             data_cache.retrieve(sequence, 'hhblits.aln', hhblits_aln_out)
             data_cache.retrieve(sequence, 'hhblits.hhm', hhblits_hhm_out)
-        aln_f = open(hhblits_aln_out)
-        o_fal = open(hhblits_fal_out, 'w')
-        seq_c = 1
-        for line in aln_f.readlines():
-            print(">seq_%d" % seq_c, file=o_fal)
-            print(line.rstrip(), file=o_fal)
-        o_fal.close()
-        aln_f.close()
-        msa_conservation = cons.score_conservation(hhblits_fal_out)
+        aln_to_faln(hhblits_aln_out, hhblits_fal_out)
+        msa_conservation = cons.score_conservation(hhblits_fal_out, gap_cutoff=gap_cutoff)
     except:
         logging.error("HHblits failed. For details, please see stderr file %s" % hhblits_stderr)
         raise
