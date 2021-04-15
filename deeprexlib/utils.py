@@ -44,6 +44,24 @@ def build_sequence_profile(acc, aln_file, we):
     numpy.savetxt(sequence_profile_file, matrix, fmt="%.2f")
     return sequence_profile_file
 
+
+def encode_protein_single_seq(sequence):
+    aa_order = 'ARNDCQEGHILKMFPSTWYV'
+    prot = []
+    for (i, residue) in enumerate(sequence):
+        one_hot = [0.0] * 20
+        try:
+            one_hot[aa_order.index(residue)-1] = 1.0
+        except:
+            pass
+        vect = numpy.concatenate((numpy.array(one_hot),
+                                  numpy.array([0.0]+one_hot),
+                                  numpy.array(one_hot),
+                                  numpy.array([0.0]*10)))
+        prot.append(vect)
+    prot = numpy.array([prot])
+    return prot
+
 def encode_protein(sequence, sequence_profile_file, hhblits_hhm_out):
     aa_order = '-ARNDCQEGHILKMFPSTWYV'
     profile = numpy.loadtxt(sequence_profile_file)

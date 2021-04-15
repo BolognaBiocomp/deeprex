@@ -84,6 +84,29 @@ def run_aln(ns):
         we.destroy()
         sys.exit(0)
 
+def run_ss(ns):
+    try:
+        we = workenv.TemporaryEnv()
+        record = SeqIO.read(ns.fasta, 'fasta')
+        sequence = str(record.seq)
+        hydrophobicity = utils.score_hp(sequence, ns.hpwin)
+        utils.print_date("Encode protein sequence [protein=%s]" % record.id)
+        protein = utils.encode_protein_single_seq(sequence)
+        utils.print_date("Predict residue solvent exposure [protein=%s]" % record.id)
+        predictions = utils.predict(protein, cfg.DEEPREX_MODEL_FILE)
+        utils.print_date("Writing predictions to TSV file [protein=%s]" % record.id)
+        ofs = open(ns.outf, 'w')
+        utils.write_tsv_output(record.id, sequence, predictions,
+                               hydrophobicity, [0.0]*len(sequence), ofs)
+    except:
+        logging.exception("Errors occurred:")
+        sys.exit(1)
+    else:
+        utils.print_date("Cleaning temporary environment end exit")
+        ofs.close()
+        we.destroy()
+        sys.exit(0)
+
 def main():
     DESC="DeepREx: Deep learning-based predictor of Residue EXposure"
     parser = argparse.ArgumentParser(description=DESC)
@@ -96,6 +119,23 @@ def main():
                                           description = "DeepREx: Multi-FASTA input module.")
     aln  = subparsers.add_parser("aln", help = "Alignment input module (one sequence at a time)",
                                     description = "DeepREx: Alignment input module.")
+    singless = subparsers.add_parser("singleseq", help = "Single sequence input module (one sequence at a time)",
+                                    description = "DeepREx: Single sequence input module.")
+    singless.add_argument("-f", "--fasta",
+                        help = "The input multi-FASTA file name",
+                        dest = "fasta", required = True)
+
+    singless.add_argument("-o", "--outf",
+                        help = "The output TSV file",
+                        dest = "outf", required = True)
+
+    singless.add_argument("-w", "--hp-window",
+                        help = "Window size for hydrophobicity computation (default: 5)",
+                        dest = "hpwin", required = False, type = int, default= 5)
+    singless.add_argument("-t", "--cpus",
+                        help = "Number of CPUs to use",
+                        dest = "cpus", type = int, default = 1)
+    singless.set_defaults(func=run_ss)
     multifasta.add_argument("-f", "--fasta",
                         help = "The input multi-FASTA file name",
                         dest = "fasta", required = True)
