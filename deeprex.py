@@ -96,7 +96,7 @@ def run_ss(ns):
             utils.print_date("Predict residue solvent exposure [protein=%s]" % record.id)
             predictions = utils.predict(protein, cfg.DEEPREX_MODEL_FILE)
             utils.print_date("Writing predictions to TSV file [protein=%s]" % record.id)
-            ofs = open(ns.outf, 'w')
+            
             utils.write_tsv_output(record.id, sequence, predictions,
                                    hydrophobicity, [0.0]*len(sequence), ofs)
     except:
