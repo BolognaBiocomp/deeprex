@@ -87,17 +87,18 @@ def run_aln(ns):
 def run_ss(ns):
     try:
         we = workenv.TemporaryEnv()
-        record = SeqIO.read(ns.fasta, 'fasta')
-        sequence = str(record.seq)
-        hydrophobicity = utils.score_hp(sequence, ns.hpwin)
-        utils.print_date("Encode protein sequence [protein=%s]" % record.id)
-        protein = utils.encode_protein_single_seq(sequence)
-        utils.print_date("Predict residue solvent exposure [protein=%s]" % record.id)
-        predictions = utils.predict(protein, cfg.DEEPREX_MODEL_FILE)
-        utils.print_date("Writing predictions to TSV file [protein=%s]" % record.id)
         ofs = open(ns.outf, 'w')
-        utils.write_tsv_output(record.id, sequence, predictions,
-                               hydrophobicity, [0.0]*len(sequence), ofs)
+        for record in SeqIO.parse(ns.fasta, 'fasta'):
+            sequence = str(record.seq)
+            hydrophobicity = utils.score_hp(sequence, ns.hpwin)
+            utils.print_date("Encode protein sequence [protein=%s]" % record.id)
+            protein = utils.encode_protein_single_seq(sequence)
+            utils.print_date("Predict residue solvent exposure [protein=%s]" % record.id)
+            predictions = utils.predict(protein, cfg.DEEPREX_MODEL_FILE)
+            utils.print_date("Writing predictions to TSV file [protein=%s]" % record.id)
+            ofs = open(ns.outf, 'w')
+            utils.write_tsv_output(record.id, sequence, predictions,
+                                   hydrophobicity, [0.0]*len(sequence), ofs)
     except:
         logging.exception("Errors occurred:")
         sys.exit(1)
