@@ -16,7 +16,7 @@ def a3m_to_aln(a3m_file, aln_file):
 def aln_to_faln(aln_file, faln_file):
     aln_f = open(aln_file)
     o_fal = open(faln_file, 'w')
-    seq_c = 1
+    seq_c = 0
     for line in aln_f.readlines():
         print(">seq_%d" % seq_c, file=o_fal)
         print(line.rstrip(), file=o_fal)
