@@ -22,6 +22,7 @@ def aln_to_faln(aln_file, faln_file):
         print(line.rstrip(), file=o_fal)
     o_fal.close()
     aln_f.close()
+    return seq_c
 
 def run_hhblits(acc, db_prefix, fasta_file, we, gap_cutoff=0.7, cpus=1, data_cache=None):
     hhblits_a3m_out = we.createFile(acc+".hhblits.", ".a3m")
@@ -33,8 +34,8 @@ def run_hhblits(acc, db_prefix, fasta_file, we, gap_cutoff=0.7, cpus=1, data_cac
 
     try:
         exec_hhblits = True
+        sequence = "".join([x.strip() for x in open(fasta_file).readlines()[1:]])
         if data_cache is not None:
-            sequence = "".join([x.strip() for x in open(fasta_file).readlines()[1:]])
             if data_cache.lookup(sequence, 'hhblits.aln'):
                 if data_cache.lookup(sequence, 'hhblits.hhm'):
                     if data_cache.lookup(sequence, 'hhblits.a3m'):
@@ -56,8 +57,11 @@ def run_hhblits(acc, db_prefix, fasta_file, we, gap_cutoff=0.7, cpus=1, data_cac
         else:
             data_cache.retrieve(sequence, 'hhblits.aln', hhblits_aln_out)
             data_cache.retrieve(sequence, 'hhblits.hhm', hhblits_hhm_out)
-        aln_to_faln(hhblits_aln_out, hhblits_fal_out)
-        msa_conservation = cons.score_conservation(hhblits_fal_out, gap_cutoff=gap_cutoff)
+        seq_c = aln_to_faln(hhblits_aln_out, hhblits_fal_out)
+        if seq_c > 1:
+            msa_conservation = cons.score_conservation(hhblits_fal_out, gap_cutoff=gap_cutoff)
+        else:
+            msa_conservation = [0] * len(sequence)
     except:
         logging.error("HHblits failed. For details, please see stderr file %s" % hhblits_stderr)
         raise
