@@ -20,6 +20,7 @@ def aln_to_faln(aln_file, faln_file):
     for line in aln_f.readlines():
         print(">seq_%d" % seq_c, file=o_fal)
         print(line.rstrip(), file=o_fal)
+        seq_c = seq_c + 1
     o_fal.close()
     aln_f.close()
     return seq_c
